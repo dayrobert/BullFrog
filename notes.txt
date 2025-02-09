@@ -1,0 +1,78 @@
+
+
+Design Notes
+
+You go to the gym and and start a workout session (session).  A workout consists of a series of exercises sessions (exercise) performed in order.  The exercises consist of one or more sets of repitions (sets) to complete the excersice workout.
+
+The ui flow is
+    open app
+    see list of previous sessions
+    click + to start a new session.  Enter date and location
+        Click cancel -> brought back to Session detial page
+        Click save -> brought to exercise detail page
+    User brought to session detial page.  List of session details and a list of exercises already performed.
+    Click + to start a new exercise.  Select from predefined list of exercises to perform
+        Click cancel -> brought back to Session detial page
+        Click save -> brought to exercise detail page
+    User brough to excersize detail page.  List details of excersize and list of sets already performed
+    Click + to add a new set.  Enter weight, reps
+        Click cancel -> brought back to Session detial page
+        Click save -> brought to exercise detail page listing new set details
+
+
+SessionsListView (contains list of sessions)
+SessionDetailView (contains session details and list of exercises)
+ExerciseDetailsView (contains exercise details and list of sets)
+SetDetailView( contains set details.  Neeed for deplaying sheet in ExerciseDetailView)
+
+Also need:
+DefinedExerciseListView
+DefinedExerciseDetailsView: to define the attrbutes of a new exercise
+FacilittListView: to define the workout facilities
+FacilityDetailsView: to define the workout facilities
+
+
+Data
+--------------
+
+Session: A visit to a facility to perform a series of exersizes
+
+Workout: An individual workout within the session. The workout can be either cardo or strength (other?)
+
+RepSet: One iteration of the excersize.  For cardo this would include the time / distance.  For Strength this would include the weight and number of repititions.
+
+
+session 1 --------------- * exercise 1 ----------------- * set
+
+
+Bench pressing would result in 3 excersize sets, each containing the weight and number of repitions
+
+Indoor running would result in a single exersizeset that incldues the time and distance
+
+
+
+
+UI
+-------------
+SessionListView.
+    list of sessions
+        Click to open details
+        Click + to open WorkoutSession details sheet to create new
+
+SessionDetails
+    Details for session, time, location
+    List of exercises
+        Click to open WorkoutSetDetail
+        Click + to open WorkoutSet details sheet to create new
+        
+ExerciseDetails
+    Details for the excersize
+    List of sets
+        Click to open
+        Click + to open ExcerciseSet details sheet to create new
+        
+
+SetDetailView
+    Details on the current set. Including weight and reps
+    
+
