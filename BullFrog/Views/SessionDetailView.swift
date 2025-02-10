@@ -70,7 +70,7 @@ struct SessionDetailView: View {
     }
     
     private func addWorkout() {
-        let newWorkout = Workout( session: activeSession, name: "" )
+        let newWorkout = Workout( session: activeSession, exercise: nil )
         context.insert( newWorkout)
         self.newWorkout = newWorkout
 

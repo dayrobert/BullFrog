@@ -52,7 +52,7 @@ struct ExerciseListView: View {
     }
     
     private func addSession() {
-        let newExercise = Exercise(name: "New Exercise", category: .strength_training )
+        let newExercise = Exercise(name: nil, category: nil )
         context.insert( newExercise)
         self.newExercise = newExercise
     }

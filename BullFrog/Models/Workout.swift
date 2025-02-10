@@ -12,22 +12,20 @@ import SwiftData
 @Model
 final class Workout {
     var session: Session?
-    var name: String // Exercise
+    var exercise: Exercise?
     var repSets = [RepSet]()
     
-    init(name: String = "") {
-        self.name = name
+    init( session: Session?, exercise: Exercise? ) {
+        self.session = session
+        self.exercise = exercise
     }
     
-    init( session: Session, name: String = "") {
-        self.session = session
-        self.name = name
-    }
+    private var exercises = Exercise.sampleData
     
     static let sampleData = [
-        Workout( name: "leg_press" ),
-        Workout( name: "check_press" ),
-        Workout( name: "back_row" ),
-        Workout( name: "curl" )
+        Workout( session: nil, exercise: Exercise.sampleData[0] ),
+        Workout( session: nil, exercise: Exercise.sampleData[1] ),
+        Workout( session: nil, exercise: Exercise.sampleData[2] ),
+        Workout( session: nil, exercise: Exercise.sampleData[3] )
     ]
 }

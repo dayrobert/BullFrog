@@ -16,7 +16,7 @@ struct WorkoutListView: View {
                     NavigationLink {
                         WorkoutDetailView( activeWorkout: workout)
                     } label: {
-                        Text( workout.name )
+                        Text( workout.exercise?.name ?? "No Exercise" )
                     }
                 }
                 .onDelete(perform: deleteItems)
@@ -27,7 +27,7 @@ struct WorkoutListView: View {
     }
     
     private func addWorkout() {
-        let newWorkout = Workout( session: activeSession  )
+        let newWorkout = Workout( session: activeSession, exercise: nil  )
         context.insert( newWorkout)
         self.newWorkout = newWorkout
     }

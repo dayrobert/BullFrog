@@ -6,6 +6,8 @@ struct WorkoutDetailView: View {
     
     let isNew: Bool
     
+    @Query private var allExercises: [Exercise]
+    
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
 
@@ -18,8 +20,12 @@ struct WorkoutDetailView: View {
 
     var body: some View {
         Form {
-            TextField("Exercise:", text: $activeWorkout.name )
-                .autocorrectionDisabled()
+            Picker("Exercise:", selection: $activeWorkout.exercise) {
+                ForEach( allExercises ) { exercise in
+                    Text(exercise.name)
+                        .tag(exercise)
+                }
+            }
             
             if !isNew {
                 Section("Sets") {

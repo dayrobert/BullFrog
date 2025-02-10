@@ -57,6 +57,10 @@ class SampleData {
     }
     
     private func insertSampleData(){
+        for ex in Exercise.sampleData {
+            context.insert(ex)
+        }
+
         for session in Session.sampleData {
             context.insert(session)
         }
@@ -78,10 +82,5 @@ class SampleData {
         RepSet.sampleData[0].workout = Workout.sampleData[0]
         RepSet.sampleData[1].workout = Workout.sampleData[0]
         RepSet.sampleData[2].workout = Workout.sampleData[0]
-        
-        for ex in Exercise.sampleData {
-            context.insert(ex)
-        }
-
     }
 }

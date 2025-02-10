@@ -17,7 +17,7 @@ struct ExerciseDetailView: View {
     var body: some View {
         Form {
             LabeledContent {
-              TextField("Name", text: $activeExercise.name )
+              TextField("Name", text: $activeExercise.name)
             } label: {
               Text("Name:")
             }

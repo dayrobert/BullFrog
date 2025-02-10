@@ -11,10 +11,10 @@ import SwiftData
 @Model
 final class Exercise {
     var name: String
-    var category: ExerciseCategory
+    var category: ExerciseCategory?
 
-    init(name: String, category: ExerciseCategory) {
-        self.name = name
+    init(name: String?, category: ExerciseCategory?) {
+        self.name = name ?? ""
         self.category = category
     }
     
