@@ -11,18 +11,18 @@ import SwiftData
 @Model
 final class Session {
     var timestamp: Date
-    var facility: String?
+    var facility: Facility?
     var workouts = [Workout]()
 
-    init(timestamp: Date, facility: String? = nil) {
+    init(timestamp: Date, facility: Facility? = nil) {
         self.timestamp = timestamp
         self.facility = facility
     }
     
     static let sampleData = [
-        Session( timestamp: .now, facility: "The Gym" ),
-        Session( timestamp: .now.addingTimeInterval(TimeInterval(-1000)), facility: "Home"),
-        Session( timestamp: .now.addingTimeInterval(TimeInterval(-4000)), facility: "At Gym")
+        Session( timestamp: .now ),
+        Session( timestamp: .now.addingTimeInterval(TimeInterval(-1000))),
+        Session( timestamp: .now.addingTimeInterval(TimeInterval(-4000)))
     ]
 }
 

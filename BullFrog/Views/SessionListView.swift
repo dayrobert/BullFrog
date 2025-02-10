@@ -35,11 +35,18 @@ struct SessionListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
-                ToolbarItem(placement: .topBarLeading ){
+                ToolbarItem(placement: .bottomBar ){
                     NavigationLink{
                         ExerciseListView()
                     } label: {
-                        Text("Settings")
+                        Text("Exercises")
+                    }
+                }
+                ToolbarItem(placement: .bottomBar ){
+                    NavigationLink{
+                        FacilityListView()
+                    } label: {
+                        Text("Facilities")
                     }
                 }
             }

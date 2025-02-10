@@ -5,9 +5,9 @@ struct SessionDetailView: View {
     @Bindable var activeSession: Session
     
     @Query private var workouts: [Workout]
+    @Query private var facilityList: [Facility]
 
     let isNew: Bool
-    let facilityList: [String] = ["Other", "The Gym", "Home"]
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
@@ -23,8 +23,8 @@ struct SessionDetailView: View {
         Form {
             DatePicker("Starting Time", selection: $activeSession.timestamp)
             Picker("Facility", selection: $activeSession.facility ){
-                ForEach(facilityList, id: \.self) { facility in
-                    Text(facility)
+                ForEach(facilityList) { facility in
+                    Text(facility.name)
                         .tag(facility)
                 }
             }
@@ -79,7 +79,7 @@ struct SessionDetailView: View {
 
 #Preview("New") {
     NavigationStack {
-        SessionDetailView( activeSession: SampleData.shared.sessionNoExercises, isNew: true )
+        SessionDetailView( activeSession: Session( timestamp: .now), isNew: true )
     }
     .modelContainer(SampleData.shared.modelContainer)
 }

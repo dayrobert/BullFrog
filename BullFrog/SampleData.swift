@@ -33,6 +33,10 @@ class SampleData {
     var workoutNoSets: Workout {
         Workout.sampleData[3]
     }
+    
+    var facility: Facility {
+        Facility.sampleData.first!
+    }
 
     var exercise: Exercise {
         return Exercise.sampleData.first!
@@ -61,6 +65,10 @@ class SampleData {
             context.insert(ex)
         }
 
+        for ex in Facility.sampleData {
+            context.insert(ex)
+        }
+
         for session in Session.sampleData {
             context.insert(session)
         }
@@ -72,6 +80,10 @@ class SampleData {
         for exset in RepSet.sampleData {
             context.insert(exset)
         }
+
+        Session.sampleData[0].facility = Facility.sampleData[0]
+        Session.sampleData[1].facility = Facility.sampleData[1]
+        Session.sampleData[2].facility = Facility.sampleData[2]
 
         Workout.sampleData[0].session = Session.sampleData[0]
         Workout.sampleData[1].session = Session.sampleData[0]

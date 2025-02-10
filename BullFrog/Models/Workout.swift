@@ -20,8 +20,6 @@ final class Workout {
         self.exercise = exercise
     }
     
-    private var exercises = Exercise.sampleData
-    
     static let sampleData = [
         Workout( session: nil, exercise: Exercise.sampleData[0] ),
         Workout( session: nil, exercise: Exercise.sampleData[1] ),

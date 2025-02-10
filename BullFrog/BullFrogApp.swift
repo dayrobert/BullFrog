@@ -14,6 +14,6 @@ struct BullFrogApp: App {
         WindowGroup {
             SessionListView()
         }
-        .modelContainer(for:[Session.self, Workout.self, RepSet.self, Exercise.self])
+        .modelContainer(for:[Session.self, Workout.self, RepSet.self, Exercise.self, Facility.self])
     }
 }
