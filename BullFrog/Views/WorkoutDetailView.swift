@@ -70,7 +70,9 @@ struct WorkoutDetailView: View {
         }
         .interactiveDismissDisabled()
     }
-        
+    
+    
+    
     private func addSet() {
         let newRepSet = RepSet( workout: activeWorkout, number: 1 )
         context.insert( newRepSet)

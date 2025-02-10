@@ -4,7 +4,7 @@ import SwiftData
 struct SessionDetailView: View {
     @Bindable var activeSession: Session
     
-    @Query private var workoutSets: [Workout]
+    @Query private var workouts: [Workout]
 
     let isNew: Bool
     let facilityList: [String] = ["Other", "The Gym", "Home"]

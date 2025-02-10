@@ -1,3 +1,27 @@
+Tickets
+
+1. Weight should increment by 5
+2. Implement the ability to define an exercise
+    a. Will incldude the following properties
+        Name
+        Type (either cardio or strength)
+            If cardio:
+                distance or time driven
+            If Strength:
+                Min/Max weight
+                number sets
+                number reps per set
+3. Implement the ability to define facilities
+    Name
+    Address
+    Phone
+4. Ability to add logo to facility
+5. Ability to add checkin image to facility
+
+            
+
+
+
 
 
 Design Notes

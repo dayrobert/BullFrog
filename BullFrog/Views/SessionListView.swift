@@ -35,6 +35,13 @@ struct SessionListView: View {
                 ToolbarItem(placement: .navigationBarTrailing) {
                     EditButton()
                 }
+                ToolbarItem(placement: .topBarLeading ){
+                    NavigationLink{
+                        ExerciseListView()
+                    } label: {
+                        Text("Settings")
+                    }
+                }
             }
             .sheet(item: $newSession){ session in
                 NavigationStack {

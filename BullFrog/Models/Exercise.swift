@@ -10,26 +10,25 @@ import SwiftData
 
 @Model
 final class Exercise {
-    var type: ExerciseType
-    
-    init(exerciseType: ExerciseType) {
-        self.type = exerciseType
+    var name: String
+    var category: ExerciseCategory
+
+    init(name: String, category: ExerciseCategory) {
+        self.name = name
+        self.category = category
     }
+    
+    static let sampleData = [
+        Exercise( name: "Bench Press", category: .strength_training  ),
+        Exercise( name: "Lat Pull", category: .strength_training  ),
+        Exercise( name: "Indoor Run", category: .cardio ),
+        Exercise( name: "Stationary Bike", category: .cardio ),
+    ]
 }
 
-enum ExerciseType: String, Codable, CaseIterable, Identifiable {
-    case leg_press = "Leg Press"
-    case chest_press = "Chest Press"
-    case back_row = "Row"
+enum ExerciseCategory: String, Codable, CaseIterable {
+    case strength_training = "Strength Training"
+    case cardio = "Cardio"
     
-    var id: String { return self.rawValue }
-
-    var name: String {
-      switch self {
-      case .leg_press:   return "Leg Press"
-      case .chest_press: return "Check Press"
-      case .back_row:   return "Row"
-      }
-    }
+    var name: String { rawValue }
 }
-
