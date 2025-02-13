@@ -12,7 +12,8 @@ import SwiftData
 final class Session {
     var timestamp: Date
     var facility: Facility? = nil
-    var workouts = [Workout]()
+    
+    @Relationship(deleteRule: .cascade, inverse: \Workout.session) var workouts = [Workout]()
 
     init(timestamp: Date, facility: Facility? = nil) {
         self.timestamp = timestamp

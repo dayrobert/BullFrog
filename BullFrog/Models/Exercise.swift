@@ -12,6 +12,8 @@ import SwiftData
 final class Exercise {
     var name: String
     var category: ExerciseCategory? = nil
+    
+    @Relationship(deleteRule: .nullify, inverse: \Workout.exercise) var workouts: [Workout]? = []
 
     init(name: String?, category: ExerciseCategory?) {
         self.name = name ?? ""

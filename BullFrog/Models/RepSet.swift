@@ -10,11 +10,12 @@ import SwiftData
 
 @Model
 final class RepSet {
-    var workout: Workout? = nil
     var number: Int
     var reps: Int? = nil
     var weight: Int? = nil
-    
+
+    @Relationship(deleteRule: .cascade) var workout: Workout? = nil
+
     private init(number: Int, reps: Int? = nil, weight: Int? = nil) {
         self.number = number
         self.reps = reps
