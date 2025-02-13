@@ -34,7 +34,9 @@ struct WorkoutDetailView: View {
                             NavigationLink {
                                 RepSetDetailView(activeRepSet: set)
                             } label: {
-                                Text(set.reps.formatted())
+                                if let reps = set.reps {
+                                    Text(reps.formatted() )
+                                }
                             }
                         }
                     } else {

@@ -16,16 +16,23 @@ struct RepSetDetailView: View {
     var body: some View {
         Form{
             Picker("Reps", selection: $activeRepSet.reps) {
+                if( activeRepSet.reps == nil ) {
+                    Text("Select reps").tag(nil as Int?)
+                }
                 ForEach(1...15, id: \.self) { rep in
-                    Text(rep.formatted())
+                    Text(rep.formatted()).tag(rep)
                 }
             }
 
             Picker("Weight", selection: $activeRepSet.weight) {
+                if( activeRepSet.weight == nil ) {
+                    Text("Select weight").tag(nil as Int?)
+                }
                 ForEach(50...200, id: \.self) { weight in
-                    Text(weight.formatted())
+                    Text(weight.formatted()).tag(weight)
                 }
             }
+            .interactiveDismissDisabled(true)
         }
         .navigationTitle(isNew ? "New Set" : "Set")
         .navigationBarTitleDisplayMode(.inline)

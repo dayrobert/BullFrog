@@ -11,8 +11,8 @@ import SwiftData
 
 @Model
 final class Workout {
-    var session: Session?
-    var exercise: Exercise?
+    var session: Session? = nil
+    var exercise: Exercise? = nil
     var repSets = [RepSet]()
     
     init( session: Session?, exercise: Exercise? ) {

@@ -20,7 +20,7 @@ struct ExerciseListView: View {
                 List {
                     ForEach(exercises) { exercise in
                         NavigationLink {
-                            ExerciseDetailView( activeExercise: exercise)
+                            ExerciseDetailView( activeExercise: exercise, isNew: false)
                         } label: {
                             Text( exercise.name )
                         }

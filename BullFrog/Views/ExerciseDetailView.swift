@@ -23,9 +23,10 @@ struct ExerciseDetailView: View {
             }
 
             Picker("Category:", selection: $activeExercise.category ){
+                Text("Select a category").tag(nil as ExerciseCategory?)
                 ForEach( ExerciseCategory.allCases, id: \.self) { value in
                     Text(value.name)
-                        .tag(value)
+                        .tag(value.self)
                 }
             }
         }

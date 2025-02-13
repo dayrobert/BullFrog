@@ -6,6 +6,7 @@ struct SessionDetailView: View {
     
     @Query private var workouts: [Workout]
     @Query private var facilityList: [Facility]
+    @Query private var allExercises: [Exercise]
 
     let isNew: Bool
     
@@ -13,6 +14,7 @@ struct SessionDetailView: View {
     @Environment(\.modelContext) var context
 
     @State private var newWorkout: Workout?
+    @State private var exercise: Exercise? = nil
 
     init(activeSession: Session, isNew: Bool = false ) {
         self.activeSession = activeSession
@@ -22,7 +24,20 @@ struct SessionDetailView: View {
     var body: some View {
         Form {
             DatePicker("Starting Time", selection: $activeSession.timestamp)
+            Picker("Exercise:", selection: $exercise) {
+                if( exercise == nil ) {
+                    Text("Select an exercise").tag(nil as Exercise?)
+                }
+                ForEach( allExercises ) { exercise in
+                    Text(exercise.name)
+                        .tag(exercise)
+                }
+            }
+
             Picker("Facility", selection: $activeSession.facility ){
+                if( activeSession.facility == nil ) {
+                    Text("Select a facility").tag(nil as Facility?)
+                }
                 ForEach(facilityList) { facility in
                     Text(facility.name)
                         .tag(facility)

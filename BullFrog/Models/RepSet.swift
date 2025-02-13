@@ -10,18 +10,18 @@ import SwiftData
 
 @Model
 final class RepSet {
-    var workout: Workout?
+    var workout: Workout? = nil
     var number: Int
-    var reps: Int
-    var weight: Int
+    var reps: Int? = nil
+    var weight: Int? = nil
     
-    init(number: Int, reps: Int = 0, weight: Int = 0) {
+    private init(number: Int, reps: Int? = nil, weight: Int? = nil) {
         self.number = number
         self.reps = reps
         self.weight = weight
     }
 
-    init( workout: Workout, number: Int, reps: Int = 0, weight: Int = 0) {
+    init( workout: Workout, number: Int, reps: Int? = nil, weight: Int? = nil) {
         self.workout = workout
         self.number = number
         self.reps = reps

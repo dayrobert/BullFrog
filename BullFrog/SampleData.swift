@@ -47,7 +47,8 @@ class SampleData {
             Session.self,
             Workout.self,
             RepSet.self,
-            Exercise.self
+            Exercise.self,
+            Facility.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true )
         

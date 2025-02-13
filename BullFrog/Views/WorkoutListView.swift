@@ -6,9 +6,6 @@ struct WorkoutListView: View {
     @Bindable var activeSession: Session
     @State private var newWorkout: Workout?
 
-    //    @Query(\.workouts) v
-//    @Query private var workouts: [Workout]
-    
     var body: some View {
         if !activeSession.workouts.isEmpty {
             List {
