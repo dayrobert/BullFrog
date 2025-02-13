@@ -10,10 +10,12 @@ import Foundation
 import SwiftData
 
 @Model
-final class Workout {
-    var session: Session? = nil
-    var exercise: Exercise? = nil
-    var repSets = [RepSet]()
+final class Workout: Identifiable {
+    @Attribute(.unique) var id: UUID = UUID()
+
+    @Relationship(deleteRule: .cascade) var session: Session? = nil
+    @Relationship(deleteRule: .nullify) var exercise: Exercise? = nil
+    @Relationship(deleteRule: .cascade, inverse: \RepSet.workout) var repSets = [RepSet]()
     
     init( session: Session?, exercise: Exercise? ) {
         self.session = session

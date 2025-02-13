@@ -10,7 +10,7 @@ import SwiftData
 
 @Model
 final class Facility {
-    var name: String
+    @Attribute(.unique) var name: String
 
     init( name: String? = nil ) {
         self.name = name ?? ""
