@@ -14,7 +14,7 @@ final class Exercise {
     var category: ExerciseCategory? = nil
     
     @Relationship(deleteRule: .nullify, inverse: \Workout.exercise) var workouts: [Workout]? = []
-    #Unique<Exercise>([\.name, \.category])
+//    #Unique<Exercise>([\.name, \.category])
 
     init(name: String?, category: ExerciseCategory?) {
         self.name = name ?? ""

@@ -9,31 +9,30 @@ import Foundation
 import SwiftData
 
 @Model
-final class RepSet {
-    @Attribute(.unique) var id: UUID = UUID()
-    var index: Int? = nil
-    var reps: Int? = nil
-    var weight: Int? = nil
-
+final class RepSet: Identifiable {
     @Relationship(deleteRule: .cascade) var workout: Workout? = nil
 
-    private init(number: Int, reps: Int? = nil, weight: Int? = nil) {
-        self.index = number
+    var index: Int
+    var reps: Int
+    var weight: Int
+
+    private init(index: Int, reps: Int, weight: Int) {
+        self.index = index
         self.reps = reps
         self.weight = weight
     }
 
-    init( workout: Workout, number: Int, reps: Int? = nil, weight: Int? = nil) {
+    init( workout: Workout, index: Int, reps: Int, weight: Int) {
         self.workout = workout
-        self.index = number
+        self.index = index
         self.reps = reps
         self.weight = weight
     }
     
     static let sampleData = [
-        RepSet( number: 1, reps: 10, weight: 100 ),
-        RepSet( number: 2, reps: 10, weight: 100 ),
-        RepSet( number: 3, reps: 8, weight: 100 ),
+        RepSet( index: 1, reps: 10, weight: 100 ),
+        RepSet( index: 2, reps: 10, weight: 100 ),
+        RepSet( index: 3, reps: 8, weight: 100 ),
     ]
 }
 

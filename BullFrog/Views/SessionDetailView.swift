@@ -2,40 +2,32 @@ import SwiftUI
 import SwiftData
 
 struct SessionDetailView: View {
-    @Bindable var activeSession: Session
-    
-    @Query private var workouts: [Workout]
     @Query private var facilityList: [Facility]
     @Query private var allExercises: [Exercise]
-
-    let isNew: Bool
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
+    @Environment(ApplicationData.self) private var appData
 
-    @State private var newWorkout: Workout?
-    @State private var exercise: Exercise? = nil
+    @Query private var sessions: [Session]
 
-    init(activeSession: Session, isNew: Bool = false ) {
-        self.activeSession = activeSession
-        self.isNew = isNew
+    @State private var timestamp: Date = .now
+    @State private var facility: Facility? = nil
+    
+    private var sessionId: Session.ID? = nil
+    
+    init( sessionId: Session.ID? = nil){
+        self.sessionId = sessionId
     }
-
+    
     var body: some View {
+        let isNew: Bool = appData.selectedSession == nil
+        
         Form {
-            DatePicker("Starting Time", selection: $activeSession.timestamp)
-            Picker("Exercise:", selection: $exercise) {
-                if( exercise == nil ) {
-                    Text("Select an exercise").tag(nil as Exercise?)
-                }
-                ForEach( allExercises ) { exercise in
-                    Text(exercise.name)
-                        .tag(exercise)
-                }
-            }
-
-            Picker("Facility", selection: $activeSession.facility ){
-                if( activeSession.facility == nil ) {
+            DatePicker("Starting Time", selection: $timestamp)
+            
+            Picker("Facility", selection: $facility ){
+                if( facility == nil ) {
                     Text("Select a facility").tag(nil as Facility?)
                 }
                 ForEach(facilityList) { facility in
@@ -46,62 +38,70 @@ struct SessionDetailView: View {
             
             if !isNew {
                 Section(header: Text("Workouts")) {
-                    WorkoutListView( activeSession: activeSession )
+                    WorkoutListView()
                 }
             }
         }
         .navigationTitle(isNew ? "New Workout Session" : "Workout Session")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar{
-            if isNew {
-                ToolbarItem(placement: .confirmationAction){
-                    Button("Save"){
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .cancellationAction){
-                    Button("Cancel"){
-                        context.delete(activeSession)
-                        dismiss()
-                    }
-                }
-            } else {
-                ToolbarItem {
-                    Button(action: addWorkout) {
-                        Label("Add Workout Set", systemImage: "plus")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading:
+            Button(action : { dismiss() }){
+                Text("Cancel")
+            },
+            trailing:
+            Button(action : { commitDataEntry() }){
+                Text("Save")
+        })
+        .onAppear(perform: loadStateVariables)
+   }
+        
+    private func loadStateVariables() {
+        if let sessionId = self.sessionId {
+            for session in sessions {
+                if session.id == sessionId {
+                    appData.selectedSession = session
+                    break;
                 }
             }
+        } else {
+            appData.selectedWorkout = nil
         }
-        .sheet(item: $newWorkout){ workout in
-            NavigationStack {
-                WorkoutDetailView( activeWorkout: workout, isNew: true )
-            }
+
+        if let session = appData.selectedSession {
+            timestamp = session.timestamp
+            facility = session.facility
         }
-        .interactiveDismissDisabled()
     }
     
-    private func addWorkout() {
-        let newWorkout = Workout( session: activeSession, exercise: nil )
-        context.insert( newWorkout)
-        self.newWorkout = newWorkout
-
+    private func commitDataEntry() {
+        if let session = appData.selectedSession {
+            session.timestamp = timestamp
+            session.facility = facility
+        } else {
+            let session = Session( timestamp: timestamp, facility: facility )
+            context.insert( session )
+        }
+        try? context.save()
+        dismiss()
     }
 }
 
 #Preview("New") {
+    @Previewable @State var appData = ApplicationData.shared
     NavigationStack {
-        SessionDetailView( activeSession: Session( timestamp: .now), isNew: true )
+        SessionDetailView()
     }
-    .modelContainer(SampleData.shared.modelContainer)
+    .environment(appData)
+    .modelContainer( for:[ Session.self, Workout.self] )
 }
 
 #Preview("Old with Sets") {
+    @Previewable @State var appData = ApplicationData.shared
     NavigationStack {
-        SessionDetailView( activeSession: SampleData.shared.session, isNew: false )
+        SessionDetailView()
     }
+    .environment(appData)
     .modelContainer(SampleData.shared.modelContainer)
 }

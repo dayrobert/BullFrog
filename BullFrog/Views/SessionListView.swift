@@ -3,32 +3,39 @@ import SwiftData
 
 struct SessionListView: View {
     @Environment(\.modelContext) private var context
-
+    @Environment(ApplicationData.self) private var appData
+    
     @Query private var sessions: [Session]
-    @State private var newSession: Session?
-
+    @State private var selection: Session.ID? = nil
+    
     var body: some View {
-        NavigationView {
+        @Bindable var appData = appData
+        
+        NavigationStack() {
             Group{
-                if !sessions.isEmpty {
-                    List {
-                        ForEach(sessions) { session in
-                            NavigationLink {
-                                SessionDetailView( activeSession: session)
-                            } label: {
-                                Text(session.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                            }
-                        }
-                        .onDelete(perform: deleteItems)
-                    }
-                } else {
+                if( sessions.isEmpty ){
                     ContentUnavailableView("Add Session", systemImage: "calendar.badge.plus" )
+                } else {
+                    ForEach (sessions) { session in 
+                        NavigationLink {
+                            SessionDetailView(sessionId: session.id )
+                        } label: {
+                            Text("\(session.timestamp.formatted())")
+                        }
+                    }
+                    .onDelete(perform: deleteItems)
                 }
             }
-            .navigationBarTitle("Workout Sessions", displayMode: .inline)
+            .navigationDestination(for: String.self, destination: { viewID in
+                if viewID == "SessionDetail" {
+                    SessionDetailView()
+                }
+            })
             .toolbar {
                 ToolbarItem {
-                    Button(action: addSession) {
+                    NavigationLink {
+                        SessionDetailView()
+                    } label: {
                         Label("Add session", systemImage: "plus")
                     }
                 }
@@ -50,19 +57,10 @@ struct SessionListView: View {
                     }
                 }
             }
-            .sheet(item: $newSession){ session in
-                NavigationStack {
-                    SessionDetailView( activeSession: session, isNew: true)
-                }
-            }
-            .interactiveDismissDisabled()
         }
     }
     
     private func addSession() {
-        let newSession = Session( timestamp: .now  )
-        context.insert( newSession)
-        self.newSession = newSession
     }
 
     private func deleteItems(offsets: IndexSet) {
@@ -75,11 +73,16 @@ struct SessionListView: View {
 }
 
 #Preview {
+    @Previewable @State var appData = ApplicationData.shared
     SessionListView()
+        .environment(appData)
         .modelContainer(SampleData.shared.modelContainer)
 }
 
 #Preview("No data") {
+    @Previewable @State var appData = ApplicationData.shared
     SessionListView()
+        .environment(appData)
         .modelContainer(for: Session.self )
 }
+

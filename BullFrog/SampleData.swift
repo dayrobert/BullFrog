@@ -11,7 +11,7 @@ import SwiftData
 @MainActor
 class SampleData {
     static let shared = SampleData()
-    
+
     let modelContainer: ModelContainer
     
     var context: ModelContext {

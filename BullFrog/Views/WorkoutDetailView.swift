@@ -2,25 +2,28 @@ import SwiftUI
 import SwiftData
 
 struct WorkoutDetailView: View {
-    @Bindable var activeWorkout: Workout
-    
-    let isNew: Bool
-    
     @Query private var allExercises: [Exercise]
     
     @Environment(\.dismiss) var dismiss
     @Environment(\.modelContext) var context
-
-    @State private var newRepSet: RepSet?
-
-    init(activeWorkout: Workout, isNew: Bool = false ) {
-        self.activeWorkout = activeWorkout
-        self.isNew = isNew
+    @Environment(ApplicationData.self) private var appData
+    
+    @State var exercise: Exercise? = nil
+    
+    private var workoutId: Workout.ID?
+    
+    init( workoutId: Workout.ID? = nil) {
+        self.workoutId = workoutId
     }
-
+    
     var body: some View {
+        let isNew: Bool = appData.selectedWorkout == nil
+
         Form {
-            Picker("Exercise:", selection: $activeWorkout.exercise) {
+            Picker("Exercise:", selection: $exercise) {
+                if( exercise == nil ) {
+                    Text("Select an exercise").tag(nil as Exercise?)
+                }
                 ForEach( allExercises ) { exercise in
                     Text(exercise.name)
                         .tag(exercise)
@@ -28,66 +31,57 @@ struct WorkoutDetailView: View {
             }
             
             if !isNew {
-                Section("Sets") {
-                    if !activeWorkout.repSets.isEmpty {
-                        ForEach( activeWorkout.repSets ) { set in
-                            NavigationLink {
-                                RepSetDetailView(activeRepSet: set)
-                            } label: {
-                                if let reps = set.reps {
-                                    Text(reps.formatted() )
-                                }
-                            }
-                        }
-                    } else {
-                        ContentUnavailableView("Add Sets", systemImage: "person.and.person" )
-                    }
+                Section(header: Text("Sets")) {
+                    RepSetListView()
                 }
             }
         }
         .navigationTitle(isNew ? "New Workout" : "Workout")
         .navigationBarTitleDisplayMode(.inline)
-        .toolbar{
-            if isNew {
-                ToolbarItem(placement: .confirmationAction){
-                    Button("Save"){
-                        dismiss()
-                    }
-                }
-                ToolbarItem(placement: .cancellationAction){
-                    Button("Cancel"){
-                        context.delete(activeWorkout)
-                        dismiss()
-                    }
-                }
-            } else {
-                ToolbarItem {
-                    Button(action: addSet) {
-                        Label("Add Set", systemImage: "plus")
-                    }
-                }
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-            }
-        }
-        .sheet(item: $newRepSet){ repset in
-            NavigationStack {
-                RepSetDetailView( activeRepSet: repset, isNew: true)
-            }
-        }
-        .interactiveDismissDisabled()
+        .navigationBarBackButtonHidden(true)
+        .navigationBarItems(
+            leading:
+            Button(action : { dismiss() }){
+                Text("Cancel")
+            },
+            trailing:
+            Button(action : { commitDataEntry() }){
+                Text("Save")
+        })
+        .onAppear(perform: loadStateVariables)
     }
     
+    private func loadStateVariables() {
+        if let workoutId = self.workoutId {
+            for workout in appData.selectedSession!.workouts {
+                if workout.id == workoutId {
+                    appData.selectedWorkout = workout
+                    break;
+                }
+            }
+        } else {
+            appData.selectedWorkout = nil
+        }
+
+        if let workout = appData.selectedWorkout {
+            exercise = workout.exercise
+        }
+    }
     
-    
-    private func addSet() {
-        let newRepSet = RepSet( workout: activeWorkout, number: 1 )
-        context.insert( newRepSet)
-        self.newRepSet = newRepSet
+    private func commitDataEntry() {
+        if let workout = appData.selectedWorkout {
+            workout.exercise = exercise!
+        } else {
+            let workout = Workout( session: appData.selectedSession!, exercise: exercise! )
+            context.insert( workout )
+        }
+        try? context.save()
+        
+        dismiss()
     }
 }
 
+/*
 #Preview("New") {
     NavigationStack {
         WorkoutDetailView( activeWorkout: SampleData.shared.workoutNoSets, isNew: true )
@@ -101,3 +95,4 @@ struct WorkoutDetailView: View {
     }
     .modelContainer(SampleData.shared.modelContainer)
 }
+*/

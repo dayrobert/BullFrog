@@ -1,44 +1,47 @@
 import SwiftUI
 import SwiftData
 
-struct WorkoutListView: View {
+struct RepSetListView: View {
     @Environment(\.modelContext) var context
     @Environment(ApplicationData.self) private var appData
+
+    @State var selection: RepSet.ID?
     
     var body: some View {
         @Bindable var appData = appData
-        let selectedSession = appData.selectedSession!
+        let selectedWorkout = appData.selectedWorkout!
 
-        Section {
-            if !(selectedSession.workouts.isEmpty) {
-                ForEach (selectedSession.workouts.sorted { $0.exercise.name < $1.exercise.name }) { workout in 
-                    NavigationLink {
-                        WorkoutDetailView(workoutId: workout.id )
-                    } label: {
-                        Text("\(workout.exercise.name)")
+        Group {
+            if !(selectedWorkout.repSets.isEmpty) {
+                List(selectedWorkout.repSets.sorted { $0.index < $1.index }, selection: $selection ) { repset in
+                   NavigationLink {
+                       RepSetDetailView( repsetId: repset.id )
+                   } label: {
+                        Text( repset.index.formatted() )
                     }
                 }
-                .onDelete(perform: deleteItems)
+                .onChange(of: selection, initial: false) { old, idRepSet in
+                    appData.selectedRepSet = selectedWorkout.repSets.first(where: { $0.id == idRepSet })
+                }
             } else {
-                ContentUnavailableView("Add Workout", systemImage: "figure.strengthtraining.traditional" )
+                ContentUnavailableView("Add Set", systemImage: "figure.strengthtraining.traditional" )
             }
         }
         .toolbar {
             ToolbarItemGroup( placement: .bottomBar ) {
                 NavigationLink {
-                    WorkoutDetailView()
+                    RepSetDetailView()
                 } label: {
-                    Text("Add Workout Set")
+                    Label("Add Workout Set", systemImage: "plus")
                 }
             }
         }
     }
-    
+
     private func deleteItems(offsets: IndexSet) {
         withAnimation {
             for index in offsets {
-                let workout = appData.selectedSession!.workouts[index]
-                context.delete(workout)
+                context.delete(appData.selectedSession!.workouts[index])
             }
         }
     }
@@ -47,12 +50,8 @@ struct WorkoutListView: View {
     struct PreviewWrapper: View {
         @State var appData = ApplicationData.shared
         
-        init(){
-            appData.selectedSession = SampleData.shared.session
-        }
-        
         var body: some View {
-            WorkoutListView()
+            RepSetListView()
             .environment(appData)
             .modelContainer(SampleData.shared.modelContainer)
         }
@@ -70,7 +69,7 @@ struct WorkoutListView: View {
         }
         
         var body: some View {
-            WorkoutListView()
+            RepSetListView()
                 .modelContainer(SampleData.shared.modelContainer)
                 .environment(appData)
         }

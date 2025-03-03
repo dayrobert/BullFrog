@@ -10,11 +10,10 @@ import SwiftData
 
 @Model
 final class Session: Identifiable {
-    @Attribute(.unique) var id: UUID = UUID()
-    var timestamp: Date
-    var facility: Facility? = nil
-    
     @Relationship(deleteRule: .cascade, inverse: \Workout.session) var workouts = [Workout]()
+
+    var timestamp: Date
+    var facility: Facility? = nil    
 
     init(timestamp: Date, facility: Facility? = nil) {
         self.timestamp = timestamp

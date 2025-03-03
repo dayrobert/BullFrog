@@ -11,13 +11,11 @@ import SwiftData
 
 @Model
 final class Workout: Identifiable {
-    @Attribute(.unique) var id: UUID = UUID()
-
     @Relationship(deleteRule: .cascade) var session: Session? = nil
-    @Relationship(deleteRule: .nullify) var exercise: Exercise? = nil
+    @Relationship(deleteRule: .nullify) var exercise: Exercise
     @Relationship(deleteRule: .cascade, inverse: \RepSet.workout) var repSets = [RepSet]()
-    
-    init( session: Session?, exercise: Exercise? ) {
+
+    init( session: Session?, exercise: Exercise ) {
         self.session = session
         self.exercise = exercise
     }
