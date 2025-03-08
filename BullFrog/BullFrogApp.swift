@@ -29,7 +29,7 @@ struct BullFrogApp: App {
         WindowGroup {
             SessionListView()
         }
-        .modelContainer(for:[Session.self, Workout.self, RepSet.self, Exercise.self, Facility.self])
+        .modelContainer(for:[Session.self, Workout.self, RepSet.self, Exercise.self, Facility.self, CardioSession.self])
         .environment(appData)
     }
 }

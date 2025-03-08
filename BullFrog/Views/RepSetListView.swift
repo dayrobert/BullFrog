@@ -46,7 +46,11 @@ struct RepSetListView: View {
         }
     }
 }
-#Preview("Default") {
+#Preview("sets") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+    appData.selectedWorkout = SampleData.shared.workoutStrength
+
     struct PreviewWrapper: View {
         @State var appData = ApplicationData.shared
         
@@ -60,19 +64,18 @@ struct RepSetListView: View {
     return PreviewWrapper()
 }
 
-#Preview("No workouts") {
+#Preview("No sets") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+    appData.selectedWorkout = SampleData.shared.workoutStrengthNoSets
+
     struct PreviewWrapper: View {
-        @State var appData = ApplicationData.shared
-        
-        init(){
-            appData.selectedSession = SampleData.shared.sessionNoExercises
-        }
-        
         var body: some View {
             RepSetListView()
-                .modelContainer(SampleData.shared.modelContainer)
-                .environment(appData)
         }
     }
+
     return PreviewWrapper()
+        .modelContainer(SampleData.shared.modelContainer)
+        .environment(appData)
 }

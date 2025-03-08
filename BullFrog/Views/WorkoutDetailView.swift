@@ -18,22 +18,30 @@ struct WorkoutDetailView: View {
     
     var body: some View {
         let isNew: Bool = appData.selectedWorkout == nil
-
-        Form {
-            Picker("Exercise:", selection: $exercise) {
-                if( exercise == nil ) {
-                    Text("Select an exercise").tag(nil as Exercise?)
+        let isStrength: Bool = appData.selectedWorkout?.exercise.category == .strength_training
+        let isCardio: Bool = !isStrength
+        
+        Group{
+            Form{
+                Picker("Exercise:", selection: $exercise) {
+                    if( exercise == nil ) {
+                        Text("Select an exercise").tag(nil as Exercise?)
+                    }
+                    ForEach( allExercises ) { exercise in
+                        Text(exercise.name)
+                            .tag(exercise)
+                    }
                 }
-                ForEach( allExercises ) { exercise in
-                    Text(exercise.name)
-                        .tag(exercise)
+            
+                if !isNew && isStrength {
+                    Section(header: Text("Sets")) {
+                        RepSetListView()
+                    }
                 }
             }
-            
-            if !isNew {
-                Section(header: Text("Sets")) {
-                    RepSetListView()
-                }
+
+            if isCardio {
+                CardioDetailView()
             }
         }
         .navigationTitle(isNew ? "New Workout" : "Workout")
@@ -81,18 +89,90 @@ struct WorkoutDetailView: View {
     }
 }
 
-/*
 #Preview("New") {
-    NavigationStack {
-        WorkoutDetailView( activeWorkout: SampleData.shared.workoutNoSets, isNew: true )
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+
+    struct PreviewView: View {
+        var body: some View {
+            WorkoutDetailView()
+        }
     }
-    .modelContainer(SampleData.shared.modelContainer)
+    
+    var ret = PreviewView()
+        .environment(appData)
+        .modelContainer( SampleData.shared.modelContainer )
+    
+    return ret
 }
 
-#Preview("Old with Sets") {
-    NavigationStack {
-        WorkoutDetailView( activeWorkout: SampleData.shared.workout, isNew: false )
+#Preview("Strength No Sets") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+
+    struct PreviewView: View {
+        var body: some View {
+            WorkoutDetailView( workoutId: SampleData.shared.workoutStrengthNoSets.id )
+        }
     }
-    .modelContainer(SampleData.shared.modelContainer)
+    
+    var ret = PreviewView()
+        .environment(appData)
+        .modelContainer( SampleData.shared.modelContainer )
+    
+    return ret
 }
-*/
+
+#Preview("Strength") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+
+    struct PreviewView: View {
+        var body: some View {
+            WorkoutDetailView( workoutId: SampleData.shared.workoutStrength.id )
+        }
+    }
+    
+    var ret = PreviewView()
+        .environment(appData)
+        .modelContainer( SampleData.shared.modelContainer )
+    
+    return ret
+}
+
+
+#Preview("Cardio No Data") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+
+    struct PreviewView: View {
+        var body: some View {
+            WorkoutDetailView( workoutId: SampleData.shared.workoutCardioNoData.id )
+        }
+    }
+    
+    var ret = PreviewView()
+        .environment(appData)
+        .modelContainer( SampleData.shared.modelContainer )
+    
+    return ret
+}
+
+#Preview("Cardio") {
+    @Previewable @State var appData = ApplicationData.shared
+    appData.selectedSession = SampleData.shared.session
+    appData.selectedWorkout = SampleData.shared.workoutCardio
+
+    struct PreviewView: View {
+        var body: some View {
+            WorkoutDetailView( workoutId: SampleData.shared.workoutCardio.id )
+        }
+    }
+    
+    var ret = PreviewView()
+        .environment(appData)
+        .modelContainer( SampleData.shared.modelContainer )
+    
+    return ret
+}
+

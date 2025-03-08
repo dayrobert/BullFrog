@@ -14,6 +14,7 @@ final class Workout: Identifiable {
     @Relationship(deleteRule: .cascade) var session: Session? = nil
     @Relationship(deleteRule: .nullify) var exercise: Exercise
     @Relationship(deleteRule: .cascade, inverse: \RepSet.workout) var repSets = [RepSet]()
+    @Relationship(deleteRule: .cascade, inverse: \CardioSession.workout) var cardioSession: CardioSession?
 
     init( session: Session?, exercise: Exercise ) {
         self.session = session

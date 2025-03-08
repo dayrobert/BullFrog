@@ -26,14 +26,22 @@ class SampleData {
         Session.sampleData[2]
     }
     
-    var workout: Workout {
-        Workout.sampleData.first!
+    var workoutStrength: Workout {
+        Workout.sampleData[0]
     }
 
-    var workoutNoSets: Workout {
+    var workoutStrengthNoSets: Workout {
+        Workout.sampleData[1]
+    }
+
+    var workoutCardio: Workout {
+        Workout.sampleData[2]
+    }
+
+    var workoutCardioNoData: Workout {
         Workout.sampleData[3]
     }
-    
+
     var facility: Facility {
         Facility.sampleData.first!
     }
@@ -48,7 +56,8 @@ class SampleData {
             Workout.self,
             RepSet.self,
             Exercise.self,
-            Facility.self
+            Facility.self,
+            CardioSession.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: true )
         
@@ -82,18 +91,31 @@ class SampleData {
             context.insert(exset)
         }
 
+        for exset in CardioSession.sampleData {
+            context.insert(exset)
+        }
+
         Session.sampleData[0].facility = Facility.sampleData[0]
         Session.sampleData[1].facility = Facility.sampleData[1]
         Session.sampleData[2].facility = Facility.sampleData[2]
 
+        // strength workouts
         Workout.sampleData[0].session = Session.sampleData[0]
         Workout.sampleData[1].session = Session.sampleData[0]
 
-        Workout.sampleData[2].session = Session.sampleData[1]
-        Workout.sampleData[3].session = Session.sampleData[1]
-        
         RepSet.sampleData[0].workout = Workout.sampleData[0]
         RepSet.sampleData[1].workout = Workout.sampleData[0]
         RepSet.sampleData[2].workout = Workout.sampleData[0]
+        // Workout.sampleData[1] = strength workout with no data
+
+        // cardio workouts
+        Workout.sampleData[2].session = Session.sampleData[1]
+        Workout.sampleData[3].session = Session.sampleData[1]
+        
+        CardioSession.sampleData[0].workout = Workout.sampleData[2]
+        Workout.sampleData[2].cardioSession = CardioSession.sampleData[0]
+        // Workout.sampleData[3] = cardio workout with no data
+
+        Session.sampleData[0].workouts = [Workout.sampleData[0], Workout.sampleData[1], Workout.sampleData[2], Workout.sampleData[3]]
     }
 }
